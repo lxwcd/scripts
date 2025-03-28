@@ -44,8 +44,8 @@ CA_KEY_FILE="${CA_DIR}/ca_key"
 CA_CERT_FILE="${CA_DIR}/ca"
 CA_ALGORITHM="RSA"  # Algorithm type
 CA_PKEYOPT="rsa_keygen_bits:2048"  # Algorithm-specific options
-CA_IP="192.168.160.173"
-CA_APP_URI="urn:open62541.client.server.application"
+CA_IP="192.168.160.102"
+CA_APP_URI="urn:open62541.server.application"
 
 # CRL file
 CUR_CRL_FILE_PEM="${CRL_DIR}/crl.pem"

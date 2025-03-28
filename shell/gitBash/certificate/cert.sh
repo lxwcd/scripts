@@ -93,4 +93,4 @@ fi
 rm client_ext.cnf
 
 # Display client certificate information
-openssl x509 -in ${CLIENT_CERT_FILE}.crt -text -noout
+#openssl x509 -in ${CLIENT_CERT_FILE}.crt -text -noout

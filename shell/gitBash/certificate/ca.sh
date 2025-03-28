@@ -35,3 +35,6 @@ openssl pkey -in ${CA_KEY_FILE}.key -out ${CA_KEY_FILE}.pem -inform pem -outform
 openssl pkey -in ${CA_KEY_FILE}.key -out ${CA_KEY_FILE}.der -inform pem -outform der
 openssl x509 -in ${CA_CERT_FILE}.crt -out ${CA_CERT_FILE}.pem -inform pem -outform pem
 openssl x509 -in ${CA_CERT_FILE}.crt -out ${CA_CERT_FILE}.der -inform pem -outform der
+
+# Display ca certificate information
+#openssl x509 -in ${CA_CERT_FILE}.crt -text -noout
