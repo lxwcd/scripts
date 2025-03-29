@@ -9,8 +9,6 @@
 #Copyright (C):     2025 All rights reserved
 #********************************************************************
 
-#!/bin/bash
-
 . env.sh
 
 # Client information
@@ -18,12 +16,12 @@ CLIENT_COMMON_NAME="revorked client" # need to be unique for each client
 #CLIENT_COMMON_NAME="uaexpert" # need to be unique for each client
 CLIENT_VALIDITY_DAYS=365
 CLIENT_KEY_LENGTH=2048
-#CLIENT_KEY_FILE="${ISSUED_DIR}/uaexpert_key"
-#CLIENT_CSR_FILE="${ISSUED_DIR}/uaexpert_csr"
-#CLIENT_CERT_FILE="${ISSUED_DIR}/uaexpert"
-CLIENT_KEY_FILE="${ISSUED_DIR}/uaexpert_revorked_key"
-CLIENT_CSR_FILE="${ISSUED_DIR}/uaexpert_revorked_csr"
-CLIENT_CERT_FILE="${ISSUED_DIR}/uaexpert_revorked"
+CLIENT_KEY_FILE="${ISSUED_DIR}/uaexpert_key"
+CLIENT_CSR_FILE="${ISSUED_DIR}/uaexpert_csr"
+CLIENT_CERT_FILE="${ISSUED_DIR}/uaexpert"
+#CLIENT_KEY_FILE="${ISSUED_DIR}/uaexpert_revorked_key"
+#CLIENT_CSR_FILE="${ISSUED_DIR}/uaexpert_revorked_csr"
+#CLIENT_CERT_FILE="${ISSUED_DIR}/uaexpert_revorked"
 CLIENT_ALGORITHM="RSA"  # Algorithm type
 CLIENT_PKEYOPT="rsa_keygen_bits:2048"  # Algorithm-specific options
 CLIENT_IP="192.168.160.173"
@@ -86,7 +84,7 @@ if [ ! -f "${INDEX_TXT_FILE}" ]; then
   touch "${INDEX_TXT_FILE}"
 fi
 if [ ! -f "${SERIAL_FILE}" ]; then
-  echo "01" > "${SERIAL_FILE}"
+  echo "00000001" > "${SERIAL_FILE}"
 fi
 
 # Clean up temporary files

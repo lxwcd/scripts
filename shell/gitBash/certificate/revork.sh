@@ -9,8 +9,6 @@
 #Copyright (C):     2025 All rights reserved
 #********************************************************************
 
-#!/bin/bash
-
 . env.sh
 
 # Client information
