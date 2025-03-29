@@ -63,7 +63,7 @@ if [ ! -f "${INDEX_TXT_FILE}" ]; then
   touch "${INDEX_TXT_FILE}"
 fi
 if [ ! -f "${SERIAL_FILE}" ]; then
-  echo "01" > "${SERIAL_FILE}"
+  echo "00000001" > "${SERIAL_FILE}"
 fi
 
 # Create openssl.cnf if it doesn't exist
@@ -134,6 +134,7 @@ subjectKeyIdentifier = hash
 authorityKeyIdentifier = keyid:always,issuer
 basicConstraints = critical, CA:true
 keyUsage = critical, digitalSignature, cRLSign, keyCertSign
+subjectAltName = IP:${CA_IP},URI:${CA_APP_URI} 
 
 [v3_client]
 subjectKeyIdentifier = hash
