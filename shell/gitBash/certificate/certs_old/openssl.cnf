@@ -1,0 +1,83 @@
+[ ca ]
+default_ca = CA_default
+
+[ CA_default ]
+dir = certs
+certs = certs/issued
+crl_dir = certs/crl
+database = certs/index.txt
+new_certs_dir = certs/issued
+certificate = certs/ca_server/ca_root.crt
+serial = certs/serial
+crl = certs/crl/crl.pem
+private_key = certs/ca_server/ca_root_key.key
+default_days = 365
+default_crl_days = 30
+default_md = sha256
+preserve = no
+email_in_dn = no
+name_opt = ca_default
+cert_opt = ca_default
+policy = policy_match
+
+[ policy_match ]
+countryName = match
+stateOrProvinceName = match
+localityName = match
+organizationName = match
+organizationalUnitName = optional
+commonName = supplied
+emailAddress = optional
+
+[ req ]
+default_bits = 2048
+default_md = sha256
+default_keyfile = privkey.pem
+distinguished_name = req_distinguished_name
+attributes = req_attributes
+x509_extensions = v3_ca
+
+[ req_distinguished_name ]
+countryName = Country Name (2 letter code)
+countryName_default = CN
+stateOrProvinceName = State or Province Name (full name)
+stateOrProvinceName_default = Liaoning
+localityName = Locality Name (e.g., city)
+localityName_default = Dalian
+0.organizationName = Organization Name (e.g., company)
+0.organizationName_default = cd
+organizationalUnitName = Organizational Unit Name (e.g., section)
+commonName = Common Name (e.g., your name or your server's hostname)
+commonName_default = MyRootCA
+emailAddress = Email Address
+emailAddress_default = admin@example.com
+
+[ req_attributes ]
+challengePassword = A challenge password
+challengePassword_min = 4
+challengePassword_max = 20
+unstructuredName = An optional company name
+
+[ v3_ca ]
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer:always
+basicConstraints = critical, CA:true
+keyUsage = critical, digitalSignature, cRLSign, keyCertSign
+subjectAltName = IP:192.168.160.102,URI:urn:open62541.server.application 
+
+[v3_client]
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer:always
+basicConstraints = CA:FALSE
+keyUsage = digitalSignature,keyEncipherment
+extendedKeyUsage = clientAuth
+subjectAltName = IP:192.168.160.173,URI:urn:localhost:UnifiedAutomation:UaExpert 
+
+[ usr_cert ]
+basicConstraints = CA:FALSE
+keyUsage = digitalSignature, keyEncipherment
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid,issuer
+
+[ crl_ext ]
+authorityKeyIdentifier=keyid:always

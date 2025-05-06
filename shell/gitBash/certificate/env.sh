@@ -1,4 +1,6 @@
 #!/bin/bash
+
+
 #
 #********************************************************************
 #Author:            lx
@@ -13,6 +15,7 @@
 CERTIFICATES_DIR="certs"
 CA_DIR="${CERTIFICATES_DIR}/ca_server"
 #CA_DIR="${CERTIFICATES_DIR}/ca_client"
+INTERMEDIATE_CA_LEVEL1_DIR="${CERTIFICATES_DIR}/intermediate_ca_level1"  # Directory for first-level intermediate CA
 ISSUED_DIR="${CERTIFICATES_DIR}/issued"
 CRL_DIR="${CERTIFICATES_DIR}/crl"
 
@@ -20,6 +23,7 @@ CRL_DIR="${CERTIFICATES_DIR}/crl"
 mkdir -p \
  "${CERTIFICATES_DIR}" \
  "${CA_DIR}" \
+ "${INTERMEDIATE_CA_LEVEL1_DIR}" \
  "${ISSUED_DIR}" \
  "${CRL_DIR}"
 
@@ -38,19 +42,15 @@ CITY="Dalian"
 ORG="cd"
 
 # CA information
-#CA_COMMON_NAME="CA Server"
-CA_COMMON_NAME="CA Client"
+CA_COMMON_NAME="MyRootCA"
 CA_VALIDITY_DAYS=3650
 CA_KEY_LENGTH=2048
-CA_KEY_FILE="${CA_DIR}/ca_server_key"
-#CA_KEY_FILE="${CA_DIR}/ca_client_key"
-CA_CERT_FILE="${CA_DIR}/ca_server"
-#CA_CERT_FILE="${CA_DIR}/ca_client"
+CA_KEY_FILE="${CA_DIR}/ca_root_key"
+CA_CERT_FILE="${CA_DIR}/ca_root"
 CA_ALGORITHM="RSA"  # Algorithm type
 CA_PKEYOPT="rsa_keygen_bits:2048"  # Algorithm-specific options
 CA_IP="192.168.160.102"
 CA_APP_URI="urn:open62541.server.application"
-#CA_APP_URI="urn:localhost:UnifiedAutomation:UaExpert"
 
 # CRL file
 CUR_CRL_FILE_PEM="${CRL_DIR}/crl.pem"
@@ -62,6 +62,18 @@ OPENSSL_CNF_FILE="${CERTIFICATES_DIR}/openssl.cnf"
 # index file
 INDEX_TXT_FILE="${CERTIFICATES_DIR}/index.txt"
 SERIAL_FILE="${CERTIFICATES_DIR}/serial"
+
+# Define variables for first-level intermediate CA
+INTERMEDIATE_CA_LEVEL1_COMMON_NAME="MyFirstLevelIntermediateCA"
+INTERMEDIATE_CA_LEVEL1_VALIDITY_DAYS=1825
+INTERMEDIATE_CA_LEVEL1_KEY_LENGTH=2048
+INTERMEDIATE_CA_LEVEL1_KEY_FILE="${INTERMEDIATE_CA_LEVEL1_DIR}/intermediate_ca_level1_key"
+INTERMEDIATE_CA_LEVEL1_CERT_FILE="${INTERMEDIATE_CA_LEVEL1_DIR}/intermediate_ca_level1"
+INTERMEDIATE_CA_LEVEL1_ALGORITHM="RSA"
+INTERMEDIATE_CA_LEVEL1_PKEYOPT="rsa_keygen_bits:2048"
+
+INTERMEDIATE_CA_IP="192.168.160.1"
+INTERMEDIATE_CA_APP_URI="intermediate.ca"
 
 # Initialize CA database files if they don't exist
 if [ ! -f "${INDEX_TXT_FILE}" ]; then
@@ -136,17 +148,26 @@ unstructuredName = An optional company name
 
 [ v3_ca ]
 subjectKeyIdentifier = hash
-authorityKeyIdentifier = keyid:always,issuer
+authorityKeyIdentifier = keyid:always,issuer:always
 basicConstraints = critical, CA:true
 keyUsage = critical, digitalSignature, cRLSign, keyCertSign
 subjectAltName = IP:${CA_IP},URI:${CA_APP_URI} 
 
 [v3_client]
 subjectKeyIdentifier = hash
-authorityKeyIdentifier = keyid,issuer
+authorityKeyIdentifier = keyid:always,issuer:always
 basicConstraints = CA:FALSE
 keyUsage = digitalSignature,keyEncipherment
 extendedKeyUsage = clientAuth
 subjectAltName = IP:${CLIENT_IP},URI:${CLIENT_APP_URI} 
+
+[ usr_cert ]
+basicConstraints = CA:FALSE
+keyUsage = digitalSignature, keyEncipherment
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid,issuer
+
+[ crl_ext ]
+authorityKeyIdentifier=keyid:always
 EOF
 fi

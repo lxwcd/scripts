@@ -41,12 +41,10 @@ echo "New serial number: ${NEW_SERIAL}"
 # Generate CA certificate
 openssl req -x509 -new -key ${CA_KEY_FILE}.key -days ${CA_VALIDITY_DAYS} -out ${CA_CERT_FILE}.crt \
   -subj "//C=${COUNTRY}\ST=${STATE}\L=${CITY}\O=${ORG}\CN=${CA_COMMON_NAME}" \
-  -set_serial ${CURRENT_SERIAL} \
   -addext "basicConstraints = critical,CA:TRUE" \
   -addext "keyUsage = critical,keyCertSign,cRLSign" \
   -addext "subjectAltName = IP:${CA_IP},URI:${CA_APP_URI}" \
-  -extensions v3_ca \
-  -config "${OPENSSL_CNF_FILE}"
+  -set_serial ${CURRENT_SERIAL}
 
 # Generate CA PEM and DER files
 openssl pkey -in ${CA_KEY_FILE}.key -out ${CA_KEY_FILE}.pem -inform pem -outform pem

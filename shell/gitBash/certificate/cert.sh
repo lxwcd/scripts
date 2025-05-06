@@ -12,13 +12,13 @@
 . env.sh
 
 # Client information
-CLIENT_COMMON_NAME="revorked client" # need to be unique for each client
-#CLIENT_COMMON_NAME="uaexpert" # need to be unique for each client
+#CLIENT_COMMON_NAME="revorked client" # need to be unique for each client
+CLIENT_COMMON_NAME="cert_level1" # need to be unique for each client
 CLIENT_VALIDITY_DAYS=365
 CLIENT_KEY_LENGTH=2048
-CLIENT_KEY_FILE="${ISSUED_DIR}/uaexpert_key"
-CLIENT_CSR_FILE="${ISSUED_DIR}/uaexpert_csr"
-CLIENT_CERT_FILE="${ISSUED_DIR}/uaexpert"
+CLIENT_KEY_FILE="${ISSUED_DIR}/cert_level1_key"
+CLIENT_CSR_FILE="${ISSUED_DIR}/cert_level1_csr"
+CLIENT_CERT_FILE="${ISSUED_DIR}/cert_level1"
 #CLIENT_KEY_FILE="${ISSUED_DIR}/uaexpert_revorked_key"
 #CLIENT_CSR_FILE="${ISSUED_DIR}/uaexpert_revorked_csr"
 #CLIENT_CERT_FILE="${ISSUED_DIR}/uaexpert_revorked"
