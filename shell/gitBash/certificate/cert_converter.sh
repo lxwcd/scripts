@@ -5,17 +5,6 @@
 #Date:              2025-05-06
 #FileName:          cert_converter.sh
 #URL:               http://github.com/lxwcd
-#Description:       shell script
-#Copyright (C):     2025 All rights reserved
-#********************************************************************
-
-#!/bin/bash
-#
-#********************************************************************
-#Author:            lx
-#Date:              2025-05-06
-#FileName:          cert_converter.sh
-#URL:               http://github.com/lxwcd
 #Description:       Shell script to convert between common certificate file formats
 #Copyright (C):     2025 All rights reserved
 #********************************************************************
@@ -24,18 +13,12 @@
 # ./cert_converter.sh -i input_file -o output_file -if input_format -of output_format
 # ./cert_converter.sh -h
 
-# Parse command line arguments
-while getopts ":i:o:if:of:h" opt; do
-    case $opt in
-        i) input_file="$OPTARG" ;;
-        o) output_file="$OPTARG" ;;
-        if) input_format="$OPTARG" ;;
-        of) output_format="$OPTARG" ;;
-        h) show_help="true" ;;
-        \?) echo "Invalid option: -$OPTARG" >&2; exit 1 ;;
-        :) echo "Option -$OPTARG requires an argument." >&2; exit 1 ;;
-    esac
-done
+# Initialize variables
+input_file=""
+output_file=""
+input_format=""
+output_format=""
+show_help="false"
 
 # Function to display help message
 show_help() {
@@ -69,6 +52,37 @@ Examples:
     $0 -i input.der -o output.pem -if DER -of PEM
 EOF
 }
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -i|--input)
+            input_file="$2"
+            shift 2
+            ;;
+        -o|--output)
+            output_file="$2"
+            shift 2
+            ;;
+        -if|--input-format)
+            input_format="$2"
+            shift 2
+            ;;
+        -of|--output-format)
+            output_format="$2"
+            shift 2
+            ;;
+        -h|--help)
+            show_help="true"
+            shift
+            ;;
+        *)
+            echo "Invalid option: $1" >&2
+            show_help
+            exit 1
+            ;;
+    esac
+done
 
 # Check if help is requested
 if [ "$show_help" = "true" ]; then
