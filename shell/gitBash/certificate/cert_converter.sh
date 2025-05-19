@@ -5,7 +5,7 @@
 #Date:              2025-05-06
 #FileName:          cert_converter.sh
 #URL:               http://github.com/lxwcd
-#Description:       Shell script to convert between common certificate file formats
+#Description:       Shell script to convert between common certificate and private key file formats
 #Copyright (C):     2025 All rights reserved
 #********************************************************************
 
@@ -28,7 +28,7 @@ Usage: $0 -i input_file -o output_file -if input_format -of output_format
 Options:
     -i, --input          Input file
     -o, --output         Output file
-    -if, --input-format  Input format (CRT, PEM, DER)
+    -if, --input-format  Input format (CRT, PEM, DER, KEY)
     -of, --output-format Output format (CRT, PEM, DER)
     -h, --help           Show this help message
 
@@ -50,6 +50,12 @@ Examples:
 
     # Convert DER to PEM
     $0 -i input.der -o output.pem -if DER -of PEM
+
+    # Convert KEY to PEM
+    $0 -i input.key -o output.pem -if KEY -of PEM
+
+    # Convert KEY to DER
+    $0 -i input.key -o output.der -if KEY -of DER
 EOF
 }
 
@@ -97,54 +103,61 @@ if [ -z "$input_file" ] || [ -z "$output_file" ] || [ -z "$input_format" ] || [ 
     exit 1
 fi
 
-# Convert certificate
-case $input_format in
-    CRT)
-        case $output_format in
-            PEM)
-                openssl x509 -inform pem -in "$input_file" -outform pem -out "$output_file"
-                ;;
-            DER)
-                openssl x509 -inform pem -in "$input_file" -outform der -out "$output_file"
-                ;;
-            *)
-                echo "Error: Unsupported output format."
-                exit 1
-                ;;
-        esac
-        ;;
-    PEM)
-        case $output_format in
-            CRT)
-                openssl x509 -inform pem -in "$input_file" -outform pem -out "$output_file"
-                ;;
-            DER)
-                openssl x509 -inform pem -in "$input_file" -outform der -out "$output_file"
-                ;;
-            *)
-                echo "Error: Unsupported output format."
-                exit 1
-                ;;
-        esac
-        ;;
-    DER)
-        case $output_format in
-            CRT)
-                openssl x509 -inform der -in "$input_file" -outform pem -out "$output_file"
-                ;;
-            PEM)
-                openssl x509 -inform der -in "$input_file" -outform pem -out "$output_file"
-                ;;
-            *)
-                echo "Error: Unsupported output format."
-                exit 1
-                ;;
-        esac
-        ;;
-    *)
-        echo "Error: Unsupported input format."
-        exit 1
-        ;;
-esac
+# Function to convert certificate or private key
+convert_file() {
+    local input_format="$1"
+    local output_format="$2"
+    local input_file="$3"
+    local output_file="$4"
+
+    case $input_format in
+        CRT|PEM)
+            case $output_format in
+                PEM|CRT)
+                    openssl x509 -in "$input_file" -out "$output_file" -outform pem
+                    ;;
+                DER)
+                    openssl x509 -in "$input_file" -out "$output_file" -outform der
+                    ;;
+                *)
+                    echo "Error: Unsupported output format for CRT/PEM input."
+                    exit 1
+                    ;;
+            esac
+            ;;
+        DER)
+            case $output_format in
+                CRT|PEM)
+                    openssl x509 -in "$input_file" -inform der -out "$output_file" -outform pem
+                    ;;
+                *)
+                    echo "Error: Unsupported output format for DER input."
+                    exit 1
+                    ;;
+            esac
+            ;;
+        KEY)
+            case $output_format in
+                PEM)
+                    openssl pkey -in "$input_file" -out "$output_file"
+                    ;;
+                DER)
+                    openssl pkey -in "$input_file" -out "$output_file" -outform der
+                    ;;
+                *)
+                    echo "Error: Unsupported output format for KEY input."
+                    exit 1
+                    ;;
+            esac
+            ;;
+        *)
+            echo "Error: Unsupported input format."
+            exit 1
+            ;;
+    esac
+}
+
+# Perform the conversion
+convert_file "$input_format" "$output_format" "$input_file" "$output_file"
 
 echo "Conversion completed successfully."
