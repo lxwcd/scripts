@@ -12,20 +12,20 @@
 
 # Check if the correct number of arguments is provided
 if [ $# -ne 1 ]; then
-    echo "Usage: $0 <certificate_file>"
+    echo "Usage: $0 <certificate_chain_file>"
     exit 1
 fi
 
-# Get the certificate file name
+# Get the certificate chain file name
 CERT_FILE="$1"
 
 # Check if the certificate file exists
 if [ ! -f "$CERT_FILE" ]; then
-    echo "Error: Certificate file '$CERT_FILE' not found."
+    echo "Error: Certificate chain file '$CERT_FILE' not found."
     exit 1
 fi
 
-# Use openssl to display certificate details
-echo "Certificate Details for: $CERT_FILE"
+# Use openssl to parse the certificate chain file
+echo "Certificate Chain Details for: $CERT_FILE"
 echo "----------------------------------"
-openssl x509 -in "$CERT_FILE" -text -noout
+openssl crl2pkcs7 -nocrl -certfile "$CERT_FILE" | openssl pkcs7 -print_certs -text -noout
