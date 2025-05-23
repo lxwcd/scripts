@@ -39,11 +39,16 @@ echo "${NEW_SERIAL}" > "${SERIAL_FILE}"
 echo "New serial number: ${NEW_SERIAL}"
 
 # Generate CA certificate
+#openssl req -x509 -new -key ${CA_KEY_FILE}.key -days ${CA_VALIDITY_DAYS} -out ${CA_CERT_FILE}.crt \
+#  -subj "//C=${COUNTRY}\ST=${STATE}\L=${CITY}\O=${ORG}\CN=${CA_COMMON_NAME}" \
+#  -addext "basicConstraints = critical,CA:TRUE" \
+#  -addext "keyUsage = critical,keyCertSign,cRLSign" \
+#  -addext "subjectAltName = DNS:${CA_DNS},IP:${CA_IP},URI:${CA_APP_URI}" \
+#  -set_serial ${CURRENT_SERIAL}
+
 openssl req -x509 -new -key ${CA_KEY_FILE}.key -days ${CA_VALIDITY_DAYS} -out ${CA_CERT_FILE}.crt \
   -subj "//C=${COUNTRY}\ST=${STATE}\L=${CITY}\O=${ORG}\CN=${CA_COMMON_NAME}" \
-  -addext "basicConstraints = critical,CA:TRUE" \
-  -addext "keyUsage = critical,keyCertSign,cRLSign" \
-  -addext "subjectAltName = IP:${CA_IP},URI:${CA_APP_URI}" \
+  -addext "basicConstraints = CA:TRUE" \
   -set_serial ${CURRENT_SERIAL}
 
 # Generate CA PEM and DER files
