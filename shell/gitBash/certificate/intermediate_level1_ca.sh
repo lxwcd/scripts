@@ -81,7 +81,7 @@ unstructuredName = An optional company name
 subjectKeyIdentifier = hash
 authorityKeyIdentifier = keyid:always,issuer:always
 basicConstraints = critical, CA:true, pathlen:0
-keyUsage = critical, digitalSignature, cRLSign, keyCertSign
+# keyUsage = critical, digitalSignature, cRLSign, keyCertSign
 subjectAltName = IP:${INTERMEDIATE_CA_IP},URI:${INTERMEDIATE_CA_APP_URI}
 
 [v3_client]
