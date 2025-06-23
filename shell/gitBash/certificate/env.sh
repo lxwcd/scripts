@@ -1,6 +1,4 @@
 #!/bin/bash
-
-
 #
 #********************************************************************
 #Author:            lx
@@ -49,8 +47,7 @@ CA_KEY_FILE="${CA_DIR}/ca_root_key"
 CA_CERT_FILE="${CA_DIR}/ca_root"
 CA_ALGORITHM="RSA"  # Algorithm type
 CA_PKEYOPT="rsa_keygen_bits:2048"  # Algorithm-specific options
-CA_DNS="RootCA"
-CA_IP="192.168.160.173"
+CA_IP="192.168.160.102"
 CA_APP_URI="urn:open62541.server.application"
 
 # CRL file
@@ -73,7 +70,7 @@ INTERMEDIATE_CA_LEVEL1_CERT_FILE="${INTERMEDIATE_CA_LEVEL1_DIR}/intermediate_ca_
 INTERMEDIATE_CA_LEVEL1_ALGORITHM="RSA"
 INTERMEDIATE_CA_LEVEL1_PKEYOPT="rsa_keygen_bits:2048"
 
-INTERMEDIATE_CA_IP="192.168.160.75"
+INTERMEDIATE_CA_IP="192.168.160.1"
 INTERMEDIATE_CA_APP_URI="intermediate.ca"
 
 # Initialize CA database files if they don't exist
@@ -152,7 +149,7 @@ subjectKeyIdentifier = hash
 authorityKeyIdentifier = keyid:always,issuer:always
 basicConstraints = critical, CA:true
 keyUsage = critical, digitalSignature, cRLSign, keyCertSign
-subjectAltName = DNS:${CA_DNS},IP:${CA_IP},URI:${CA_APP_URI} 
+subjectAltName = IP:${CA_IP},URI:${CA_APP_URI} 
 
 [v3_client]
 subjectKeyIdentifier = hash
@@ -160,7 +157,7 @@ authorityKeyIdentifier = keyid:always,issuer:always
 basicConstraints = CA:FALSE
 keyUsage = digitalSignature,keyEncipherment
 extendedKeyUsage = clientAuth
-subjectAltName = DNS:${CLIENT_DNS},IP:${CLIENT_IP},URI:${CLIENT_APP_URI} 
+subjectAltName = IP:${CLIENT_IP},URI:${CLIENT_APP_URI} 
 
 [ usr_cert ]
 basicConstraints = CA:FALSE
