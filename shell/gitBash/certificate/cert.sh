@@ -13,19 +13,19 @@
 
 # Client information
 #CLIENT_COMMON_NAME="revorked client" # need to be unique for each client
-CLIENT_COMMON_NAME="Client" # need to be unique for each client
+CLIENT_COMMON_NAME="Client2" # need to be unique for each client
 CLIENT_VALIDITY_DAYS=365
 CLIENT_KEY_LENGTH=2048
-CLIENT_KEY_FILE="${ISSUED_DIR}/Client_key"
-CLIENT_CSR_FILE="${ISSUED_DIR}/Client_csr"
-CLIENT_CERT_FILE="${ISSUED_DIR}/Client"
+CLIENT_KEY_FILE="${ISSUED_DIR}/Client2_key"
+CLIENT_CSR_FILE="${ISSUED_DIR}/Client2_csr"
+CLIENT_CERT_FILE="${ISSUED_DIR}/Client2"
 #CLIENT_KEY_FILE="${ISSUED_DIR}/uaexpert_revorked_key"
 #CLIENT_CSR_FILE="${ISSUED_DIR}/uaexpert_revorked_csr"
 #CLIENT_CERT_FILE="${ISSUED_DIR}/uaexpert_revorked"
 CLIENT_ALGORITHM="RSA"  # Algorithm type
 CLIENT_PKEYOPT="rsa_keygen_bits:2048"  # Algorithm-specific options
 CLIENT_DNS="IND400"
-CLIENT_IP="192.168.160.102"
+CLIENT_IP="192.168.160.173"
 CLIENT_APP_URI="urn:localhost:UnifiedAutomation:UaExpert"
 
 # Examples of other algorithms that can be used (commented out, can be enabled as needed)
@@ -61,18 +61,18 @@ openssl req -new -key ${CLIENT_KEY_FILE}.key -out ${CLIENT_CSR_FILE}.csr \
 #  -CAcreateserial -days ${CLIENT_VALIDITY_DAYS} -out ${CLIENT_CERT_FILE}.crt -extfile client_ext.cnf
 
 #************************* use openssl ca command ******************************************
-#cat > client_ext.cnf << EOF
-#[v3_client]
-#basicConstraints = critical,CA:FALSE
-#keyUsage = critical,digitalSignature,keyEncipherment
-#extendedKeyUsage = clientAuth
-#subjectAltName = DNS:${CLIENT_DNS},IP:${CLIENT_IP},URI:${CLIENT_APP_URI}
-#EOF
-
 cat > client_ext.cnf << EOF
 [v3_client]
-basicConstraints = CA:FALSE
+basicConstraints = critical,CA:FALSE
+keyUsage = critical,digitalSignature,keyEncipherment,nonRepudiation
+extendedKeyUsage = clientAuth,serverAuth
+subjectAltName = DNS:${CLIENT_DNS},IP:${CLIENT_IP},URI:${CLIENT_APP_URI}
 EOF
+
+#cat > client_ext.cnf << EOF
+#[v3_client]
+#basicConstraints = CA:FALSE
+#EOF
 
 
 # Issue client certificate using openssl ca command with -batch option
