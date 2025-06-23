@@ -9,6 +9,7 @@
 #Copyright (C):     2025 All rights reserved
 #********************************************************************
 
+# Load environment variables from env.sh
 . env.sh
 
 # Self-signed client information
@@ -19,7 +20,7 @@ SELF_SIGNED_CLIENT_KEY_FILE="${ISSUED_DIR}/self_signed_client_key"
 SELF_SIGNED_CLIENT_CERT_FILE="${ISSUED_DIR}/self_signed_client"
 SELF_SIGNED_CLIENT_ALGORITHM="RSA"  # Algorithm type
 SELF_SIGNED_CLIENT_PKEYOPT="rsa_keygen_bits:2048"  # Algorithm-specific options
-SELF_SIGNED_CLIENT_IP="192.168.160.200"
+SELF_SIGNED_CLIENT_IP="192.168.160.173"
 SELF_SIGNED_CLIENT_APP_URI="urn:localhost:self_signed_client"
 
 # Define serial number for self-signed certificate
@@ -39,9 +40,12 @@ openssl genpkey -algorithm ${SELF_SIGNED_CLIENT_ALGORITHM} -out ${SELF_SIGNED_CL
 openssl req -x509 -new -key ${SELF_SIGNED_CLIENT_KEY_FILE}.key -days ${SELF_SIGNED_CLIENT_VALIDITY_DAYS} -out ${SELF_SIGNED_CLIENT_CERT_FILE}.crt \
   -subj "//C=${COUNTRY}\ST=${STATE}\L=${CITY}\O=${ORG}\CN=${SELF_SIGNED_CLIENT_COMMON_NAME}" \
   -addext "basicConstraints = critical,CA:FALSE" \
-  -addext "keyUsage = digitalSignature,keyEncipherment" \
-  -addext "extendedKeyUsage = clientAuth" \
+  -addext "keyUsage = critical,digitalSignature,keyEncipherment,nonRepudiation" \
+  -addext "extendedKeyUsage = clientAuth,serverAuth" \
   -addext "subjectAltName = IP:${SELF_SIGNED_CLIENT_IP},URI:${SELF_SIGNED_CLIENT_APP_URI}" \
+  -addext "nsComment = Generated with OpenSSL" \
+  -addext "authorityKeyIdentifier = keyid,issuer" \
+  -addext "subjectKeyIdentifier = hash" \
   -set_serial ${CURRENT_SERIAL}
 
 # Generate self-signed client PEM and DER files
