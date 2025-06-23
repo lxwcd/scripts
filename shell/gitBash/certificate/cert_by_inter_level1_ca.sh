@@ -39,8 +39,8 @@ openssl req -new -key ${CLIENT_KEY_FILE}.key -out ${CLIENT_CSR_FILE}.csr \
 cat > client_ext.cnf << EOF
 [v3_client]
 basicConstraints = critical,CA:FALSE
-keyUsage = critical,digitalSignature,keyEncipherment
-extendedKeyUsage = clientAuth
+keyUsage = critical,digitalSignature,keyEncipherment,nonRepudiation
+extendedKeyUsage = clientAuth,serverAuth
 subjectAltName = IP:${CLIENT_IP},URI:${CLIENT_APP_URI}
 EOF
 
